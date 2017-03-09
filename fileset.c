@@ -301,7 +301,9 @@ fileset_alloc_file(filesetentry_t *entry)
 	trust_tree = avd_get_bool(fileset->fs_trust_tree);
 	if ((entry->fse_flags & FSE_REUSING) && (trust_tree ||
 	    (FB_STAT(path, &sb) == 0))) {
-		if (FB_OPEN(&fdesc, path, fs_readonly ? O_RDONLY : O_RDWR, 0) == FILEBENCH_ERROR) {
+		mode_t mode = (fs_readonly || trust_tree) ? O_RDONLY : O_RDWR;
+
+		if (FB_OPEN(&fdesc, path, mode, 0) == FILEBENCH_ERROR) {
 			filebench_log(LOG_INFO,
 			    "Attempted but failed to Re-use file %s",
 			    path);
