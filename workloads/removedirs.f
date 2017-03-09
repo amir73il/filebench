@@ -24,14 +24,14 @@
 #
 # Creates a fileset with $ndirs empty leaf directories then rmdir's all of them
 #
-set $dir=/tmp
+set $dir=/mnt
 set $ndirs=10000
 set $meandirwidth=100
 set $nthreads=16
 
 set mode quit firstdone
 
-define fileset name=bigfileset,path=$dir,size=0,leafdirs=$ndirs,dirwidth=$meandirwidth,prealloc
+define fileset name=bigfileset,path=$dir,size=0,leafdirs=$ndirs,dirwidth=$meandirwidth,reuse,prealloc,trusttree
 
 define process name=remdir,instances=1
 {
@@ -42,3 +42,4 @@ define process name=remdir,instances=1
 }
 
 echo  "RemoveDir Version 1.0 personality successfully loaded"
+run

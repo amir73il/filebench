@@ -25,12 +25,16 @@
 # Creates a fileset with $nfiles empty files, then proceeds to open each one
 # and then close it.
 #
-set $dir=/tmp
+set $dir=/mnt
 set $nfiles=50000
+set $count=150000
 set $meandirwidth=100
+set $meanfilesize=16k
 set $nthreads=16
 
-define fileset name=bigfileset,path=$dir,size=0,entries=$nfiles,dirwidth=$meandirwidth,prealloc
+set mode quit firstdone
+
+define fileset name=bigfileset,path=$dir,size=$meanfilesize,entries=$nfiles,dirwidth=$meandirwidth,reuse,prealloc,trusttree
 
 define process name=fileopen,instances=1
 {
@@ -38,7 +42,9 @@ define process name=fileopen,instances=1
   {
     flowop openfile name=open1,filesetname=bigfileset,fd=1
     flowop closefile name=close1,fd=1
+    flowop finishoncount name=finish,value=$count
   }
 }
 
 echo  "Openfiles Version 1.0 personality successfully loaded"
+run

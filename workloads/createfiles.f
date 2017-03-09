@@ -23,7 +23,7 @@
 # Use is subject to license terms.
 #
 
-set $dir=/tmp
+set $dir=/mnt
 set $nfiles=50000
 set $meandirwidth=100
 set $meanfilesize=16k
@@ -45,3 +45,4 @@ define process name=filecreate,instances=1
 }
 
 echo  "Createfiles Version 3.0 personality successfully loaded"
+run
