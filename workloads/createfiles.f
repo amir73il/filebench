@@ -27,22 +27,8 @@ set $dir=/mnt
 set $nfiles=50000
 set $meandirwidth=100
 set $meanfilesize=16k
-set $iosize=1m
-set $nthreads=16
 
-set mode quit firstdone
-
-define fileset name=bigfileset,path=$dir,size=$meanfilesize,entries=$nfiles,dirwidth=$meandirwidth
-
-define process name=filecreate,instances=1
-{
-  thread name=filecreatethread,memsize=10m,instances=$nthreads
-  {
-    flowop createfile name=createfile1,filesetname=bigfileset,fd=1
-    flowop writewholefile name=writefile1,fd=1,iosize=$iosize
-    flowop closefile name=closefile1,fd=1
-  }
-}
+define fileset name=bigfileset,path=$dir,size=$meanfilesize,entries=$nfiles,dirwidth=$meandirwidth,prealloc
 
 echo  "Createfiles Version 3.0 personality successfully loaded"
-run
+create files
