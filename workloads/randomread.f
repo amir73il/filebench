@@ -23,10 +23,10 @@
 # Use is subject to license terms.
 #
 
-set $dir=/tmp
+set $dir=/mnt
 set $filesize=5g
 set $iosize=8k
-set $nthreads=1
+set $nthreads=8
 set $workingset=0
 set $directio=0
 
@@ -41,3 +41,4 @@ define process name=rand-read,instances=1
 }
 
 echo "Random Read Version 3.0 personality successfully loaded"
+run 60
