@@ -4,6 +4,13 @@ workloads_DATA = compflow_demo.f \
 	copyfiles.f \
 	createfiles.f \
 	cvar_example.f \
+	file-cr-wr-4KB-1th-1Mf.f \
+	file-preall-de-4KB-1th-1Mf.f \
+	file-preall-re-4KB-1th-1Mf.f \
+	file-rd-re-4KB-32th-1f.f \
+	file-rd-wr-4KB-32th-1f.f \
+	file-sq-re-1MB-1th-1f.f \
+	file-sq-wr-1MB-1th-1f.f \
 	filemicro_create.f \
 	filemicro_createfiles.f \
 	filemicro_createrand.f \
@@ -46,6 +53,5 @@ workloads_DATA = compflow_demo.f \
 	videoserver.f \
 	webproxy.f \
 	webserver.f
-
 
 EXTRA_DIST = $(workloads_DATA)
