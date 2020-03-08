@@ -22,8 +22,8 @@
 # Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
 #
-# Creates a fileset with a fairly deep directory tree, then does readdir
-# operations on them for a specified amount of time
+# Use a preallocated fileset with a fairly deep directory tree -
+# do readdir operations on them for a specified amount of time
 #
 set $dir=/mnt
 set $nfiles=50000
@@ -31,7 +31,7 @@ set $meandirwidth=100
 set $meanfilesize=16k
 set $nthreads=16
 
-define fileset name=bigfileset,path=$dir,size=$meanfilesize,entries=$nfiles,dirwidth=$meandirwidth,reuse,prealloc,trusttree
+define fileset name=bigfileset,path=$dir,size=$meanfilesize,entries=$nfiles,dirwidth=$meandirwidth,reuse,trusttree
 
 define process name=lsdir,instances=1
 {
@@ -42,4 +42,6 @@ define process name=lsdir,instances=1
 }
 
 echo  "ListDirs Version 1.0 personality successfully loaded"
-run 60
+system "sync"
+system "echo 3 > /proc/sys/vm/drop_caches"
+psrun -10

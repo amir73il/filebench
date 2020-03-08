@@ -22,8 +22,8 @@
 # Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
 #
-# Creates a fileset with $nfiles empty files, then proceeds to open each one
-# and then close it.
+# Use a preallocated fileset with $nfiles empty files -
+# open each one and then close it.
 #
 set $dir=/mnt
 set $nfiles=50000
@@ -34,17 +34,19 @@ set $nthreads=16
 
 set mode quit firstdone
 
-define fileset name=bigfileset,path=$dir,size=$meanfilesize,entries=$nfiles,dirwidth=$meandirwidth,reuse,prealloc,trusttree
+define fileset name=bigfileset,path=$dir,size=$meanfilesize,entries=$nfiles,dirwidth=$meandirwidth,reuse,trusttree
 
 define process name=fileopen,instances=1
 {
   thread name=fileopener,memsize=1m,instances=$nthreads
   {
-    flowop openfile name=open1,filesetname=bigfileset,fd=1
+    flowop createfile name=open1,filesetname=bigfileset,fd=1
     flowop closefile name=close1,fd=1
     flowop finishoncount name=finish,value=$count
   }
 }
 
 echo  "Openfiles Version 1.0 personality successfully loaded"
-run
+system "sync"
+system "echo 3 > /proc/sys/vm/drop_caches"
+psrun -10

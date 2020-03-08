@@ -22,13 +22,30 @@
 # Copyright 2009 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
 #
-
+# Creates a fileset with $nfiles empty files
+#
 set $dir=/mnt
 set $nfiles=50000
 set $meandirwidth=100
 set $meanfilesize=16k
+set $iosize=1m
+set $nthreads=16
 
-define fileset name=bigfileset,path=$dir,size=$meanfilesize,entries=$nfiles,dirwidth=$meandirwidth,prealloc
+set mode quit firstdone
+
+define fileset name=bigfileset,path=$dir,size=$meanfilesize,entries=$nfiles,dirwidth=$meandirwidth
+
+define process name=filecreate,instances=1
+{
+  thread name=filecreatethread,memsize=10m,instances=$nthreads
+  {
+    flowop createfile name=createfile1,filesetname=bigfileset,fd=1
+    flowop writewholefile name=writefile1,fd=1,iosize=$iosize
+    flowop closefile name=closefile1,fd=1
+  }
+}
 
 echo  "Createfiles Version 3.0 personality successfully loaded"
-create files
+system "sync"
+system "echo 3 > /proc/sys/vm/drop_caches"
+psrun -10
